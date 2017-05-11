@@ -13,10 +13,21 @@ use Illuminate\Http\Request;
 |
 */
 
-
+/**
+ * Routes для работы с пространствами
+ */
 Route::post('/workspace/create', 'WorkspaceController@create');
 Route::post('/workspace/edit', 'WorkspaceController@edit');
 Route::post('/workspace/delete', 'WorkspaceController@delete');
-Route::post('/workspace/add_permission', 'WorkspaceController@add_permission');
-Route::post('/workspace/delete_permission', 'WorkspaceController@delete_permission');
-Route::post('/users/find', 'WorkspaceController@find_users');
+
+/**
+ * Routes для работы с привилегиями
+ */
+Route::post('/permissions/add', 'UserController@add_permission');
+Route::post('/permissions/edit', 'UserController@edit_permission');
+Route::post('/permissions/delete', 'UserController@delete_permission');
+
+/**
+ * Routes для работы с пользователями
+ */
+Route::post('/users/find', 'UserController@find_users');

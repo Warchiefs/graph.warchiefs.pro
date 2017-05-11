@@ -1,8 +1,13 @@
 <!-- Доступ к объекту User - залогиненного пользователя -->
 {{ Auth::user() }}
 <hr>
+<hr>
 <!-- Доступ к пространствам, владельцем которого является данный пользователь -->
-{{ Auth::user()->workspaces }}
+@foreach(Auth::user()->workspaces as $workspace)
+    {{ $workspace }}<br>
+    {{ $workspace->users }}
+    <hr>
+@endforeach
 <hr>
 <!-- Доступ к пространствам, к которым есть какой-либо доступ у авторизованного пользователя -->
 {{ Auth::user()->workspaces_shared }}
@@ -50,16 +55,13 @@ Array (2)
 <!-- Привет создания пространства -->
 <script>
     $.ajax({
-        url: '/workspace/create',
+        url: '/workspace/edit_permission',
         dataType: 'json',
         method: 'POST',
         data: {
-            name: 'Workspace#1',
-
-            users: JSON.stringify({
-                1: '0',
-                3: '0'
-            })
+            workspace_id: 11,
+            user_id: 12,
+            permission: 0
         }
     }).success(function (response) {
         console.log(response);

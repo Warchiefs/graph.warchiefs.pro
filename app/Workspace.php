@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Workspace extends Model
@@ -51,39 +52,6 @@ class Workspace extends Model
 	 */
 	public function users()
 	{
-		return $this->belongsToMany('App\User', 'workspace_permissions', 'user_id', 'workspace_id')->withPivot('permissions');
-	}
-
-	public function check_permissions($workspace_id, $action)
-	{
-		$workspace = Workspace::find($workspace_id);
-
-		if($workspace->id == Auth::user()->id) {
-			return true;
-		}
-
-		$perm = Auth::user()->workspaces_shared()->where('workspace_id', $workspace_id)->first()->pivot->permissions;
-
-		if(!$perm) {
-			return false;
-		}
-
-		switch ($action) {
-			case 'edit':
-				return $perm == 1;
-				break;
-			case 'delete':
-				return $perm == 2;
-				break;
-			case 'add_permission':
-				return $perm == 2;
-				break;
-			case 'delete_permission':
-				return $perm == 2;
-				break;
-			default:
-				return $perm == 2;
-				break;
-		}
+		return $this->belongsToMany('App\User', 'workspace_permissions', 'workspace_id', 'user_id')->withPivot('permissions');
 	}
 }

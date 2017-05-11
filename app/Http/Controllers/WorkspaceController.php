@@ -36,7 +36,7 @@ class WorkspaceController extends Controller
 	 *
 	 * @param Request $request
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return array
 	 */
     public function create(Request $request)
     {
@@ -65,10 +65,7 @@ class WorkspaceController extends Controller
 		    }
 	    }
 
-	    return response()->json([
-		    'success' => true,
-		    'workspace' => $workspace
-	    ]);
+	    return [true, 'Пространство создано', $workspace];
 
     }
 
@@ -77,13 +74,13 @@ class WorkspaceController extends Controller
 	 *
 	 * @param Request $request
 	 *
-	 * @return mixed
+	 * @return array
 	 */
     public function edit(Request $request)
     {
 	    Validator::make($request->all(),
 			        [
-			        'workspace_id' => 'required|valid_workspace|can_edit_workspace'
+			        'workspace_id' => 'bail|required|valid_workspace|can_edit_workspace'
 			    ],
 			    [
 			        'workspace_id.required' => 'Не указано ID пространства',
@@ -107,7 +104,7 @@ class WorkspaceController extends Controller
 
 	    $workspace->save();
 
-	    return $workspace;
+	    return [true, 'Пространство изменено', $workspace];
     }
 
 	/**
@@ -115,18 +112,18 @@ class WorkspaceController extends Controller
 	 *
 	 * @param Request $request
 	 *
-	 * @return bool
+	 * @return array
 	 */
     public function delete(Request $request)
     {
 	    Validator::make($request->all(),
 		    [
-			    'workspace_id' => 'required|valid_workspace|can_delete_workspace'
+			    'workspace_id' => 'bail|required|valid_workspace|can_delete_workspace'
 		    ],
 		    [
 			    'workspace_id.required' => 'Не указано ID пространства',
 			    'workspace_id.valid_workspace' => 'Недопустимое пространство',
-			    'workspace_id.can_edit_workspace' => 'Вы не можете редактировать это пространство',
+			    'workspace_id.can_delete_workspace' => 'Вы не можете редактировать это пространство',
 
 		    ])
 		    ->validate();
@@ -137,77 +134,6 @@ class WorkspaceController extends Controller
 
 	    Workspace::find($request->get('workspace_id'))->delete();
 
-	    return true;
+	    return [true, 'Пространство удалено'];
     }
-
-	/**
-	 * Добавление пользователя к пространству с установкой права доступа.
-	 *
-	 * @param Request $request
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-    public function add_permission(Request $request)
-    {
-	    Validator::make($request->all(),
-		    [
-			    'workspace_id' => 'required|valid_workspace|can_add_permission',
-			    'user_id' => 'required',
-			    'permission' => 'required|valid_permission'
-		    ],
-		    [
-			    'workspace_id.required' => 'Не указано ID пространства',
-			    'workspace_id.valid_workspace' => 'Недопустимое пространство',
-			    'workspace_id.can_add_permission' => 'Недостаточно прав для совершения этого действия',
-			    'user_id.required' => 'Не передан ID пользователя',
-			    'permission.required' => 'Не передан ключ привилегии',
-			    'permission.valid_permission' => 'Неверный ключ привилегии. (доступные ключи: 0, 1, 2)'
-
-		    ])
-		    ->validate();
-
-	    $workspace = Workspace::find($request->get('workspace_id'));
-
-	    $workspace->users->attach($request->get('user_id'), ['permissions' => $request->get('permission')]);
-
-	    return response()->json([
-		    'success' => true
-	    ]);
-
-    }
-
-	/**
-	 * Удаление пользователя с видимости пространства
-	 *
-	 * @param Request $request
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function delete_permission(Request $request)
-	{
-		Validator::make($request->all(),
-			[
-				'workspace_id' => 'required|valid_workspace|can_delete_permission',
-				'user_id' => 'required',
-				'permission' => 'required|valid_permission'
-			],
-			[
-				'workspace_id.required' => 'Не указано ID пространства',
-				'workspace_id.valid_workspace' => 'Недопустимое пространство',
-				'workspace_id.can_delete_permission' => 'Недостаточно прав для совершения этого действия',
-				'user_id.required' => 'Не передан ID пользователя',
-				'permission.required' => 'Не передан ключ привилегии',
-				'permission.valid_permission' => 'Неверный ключ привилегии. (доступные ключи: 0, 1, 2)'
-
-			])
-			->validate();
-
-		$workspace = Workspace::find($request->get('workspace_id'));
-
-		$workspace->users->detach($request->get('user_id'));
-
-		return response()->json([
-			'success' => true
-		]);
-	}
 }
