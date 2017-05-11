@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+Route::post('/workspace/create', 'WorkspaceController@create');
+Route::post('/workspace/edit', 'WorkspaceController@edit');
+Route::post('/workspace/delete', 'WorkspaceController@delete');
+Route::post('/workspace/add_permission', 'WorkspaceController@add_permission');
+Route::post('/workspace/delete_permission', 'WorkspaceController@delete_permission');
+Route::post('/users/find', 'WorkspaceController@find_users');
