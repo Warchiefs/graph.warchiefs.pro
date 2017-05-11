@@ -28,11 +28,27 @@ class Workspace extends Model
 
 	public $timestamps = true;
 
+	/**
+	 * Одиночная связь Пространство -> Создатель (App\User)
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
 	public function owner()
 	{
 		return $this->hasOne('App\User', 'id', 'own');
 	}
 
+	/**
+	 * Связь "Многое-ко-многим" Пространства -> пользователи с какими либо правами.
+	 * Получение привилегии через Pivot таблицу.
+	 * Пример использования:
+	 *
+	 *  foreach(Auth::user()->workspaces_shared as $shared)
+	 *		$shared->pivot->permissions
+	 *	endforeach;
+	 *
+	 * @return $this
+	 */
 	public function users()
 	{
 		return $this->belongsToMany('App\User', 'workspace_permissions', 'user_id', 'workspace_id')->withPivot('permissions');

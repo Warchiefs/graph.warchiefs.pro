@@ -19,11 +19,24 @@ class WorkspaceController extends Controller
 		$this->middleware('auth');
 	}
 
+	/**
+	 * Страница с пространствами
+	 * Зарезервирован под дальнейшие расширения
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
     public function index()
     {
 	    return view('workspaces');
     }
 
+	/**
+	 * Создание пространства
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function create(Request $request)
     {
     	if(!$request->has('name')) {
@@ -64,6 +77,13 @@ class WorkspaceController extends Controller
 
     }
 
+	/**
+	 * Редактирование пространства
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function edit(Request $request)
     {
     	if(!$request->has('workspace_id')) {
@@ -109,6 +129,13 @@ class WorkspaceController extends Controller
 	    ]);
     }
 
+	/**
+	 * Удаление пространств
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function delete(Request $request)
     {
 	    if(!$request->has('workspace_id')) {
@@ -149,6 +176,13 @@ class WorkspaceController extends Controller
 
     }
 
+	/**
+	 * Добавление пользователя к пространству с установкой права доступа.
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
     public function add_permission(Request $request)
     {
 	    if(!$request->has('workspace_id')) {
@@ -206,6 +240,13 @@ class WorkspaceController extends Controller
 
     }
 
+	/**
+	 * Удаление пользователя с видимости пространства
+	 *
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function delete_permission(Request $request)
 	{
 		if(!$request->has('workspace_id')) {
@@ -248,23 +289,5 @@ class WorkspaceController extends Controller
 		return response()->json([
 			'success' => true
 		]);
-	}
-
-	public function find_users(Request $request)
-	{
-		if($request->has('string')) {
-
-			$string = $request->get('string');
-
-			return response()->json([
-				'success' => true,
-				'users' => User::where('name', 'LIKE', "%$string%")->orWhere('email', 'LIKE', "%$string%")->get()
-			]);
-		} else {
-			return response()->json([
-				'success' => true,
-				'users' => User::all()
-			]);
-		}
 	}
 }
