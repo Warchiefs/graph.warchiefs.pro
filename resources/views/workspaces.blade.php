@@ -72,5 +72,3 @@ Array (2)
 
 Ответ: {name: "Workspace#1", color: "#eee", own: 2, updated_at: "2017-05-06 23:27:55", created_at: "2017-05-06 23:27:55", …}
 -->
-
-<!-- Подробная документация тут: https://hastebin.com/jazivusoti.makefile -->
