@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "SUZ for work with graphs",
     "keywords": ["framework", "laravel"],
+    "minimum-stability" : "dev",
+    "prefer-stable" : true,
     "license": "MIT",
     "type": "project",
     "require": {
