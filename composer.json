@@ -1,6 +1,7 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
+    "name": "Warchiefs/graph.warchiefs.pro",
+    "verwion": 0.1,
+    "description": "SUZ for work with graphs",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
