@@ -1,78 +1,71 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Авторизация</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url('/assets/fonts/opensans/opensans.css') }}">
+    <link rel="stylesheet" href="{{ url('/assets/fonts/icomoon/style.css') }}">
+    <link rel="stylesheet" href="{{ url('/build/Style.css') }}">
+</head>
+<body>
+<!-- BEGIN login page -->
+<div class="login-page">
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Вход</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
-                        {{ csrf_field() }}
+    <div class="login-page__wrap">
 
-                        @if(Request::session()->has('error'))
-                            <div class="alert alert-danger">
-                                <b>Ошибка!</b> {{ Request::session()->get('error') }}
-                            </div>
-                        @endif
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Пароль</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Запомнить меня
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Войти
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Забыли пароль?
-                                </a>
-                                <a class="btn btn-link" href="/redirect/facebook"><i class="fa fa-facebook"></i></a>
-                                <a class="btn btn-link" href="/redirect/google"><i class="fa fa-google-plus"></i></a>
-                                <a class="btn btn-link" href="/redirect/vkontakte"><i class="fa fa-vk"></i></a>
-                                <a class="btn btn-link" href="/redirect/yandex">Я</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+        <!-- BEGIN login top -->
+        <div class="login-top">
+            <div class="login-top__rainbow-wrap">
+                <div class="login-top__rainbow"></div>
             </div>
+            <img src="{{ url('/assets/img/login/login-logo.svg') }}" class="login-top__logo">
         </div>
+        <!-- END login top -->
+
+        <!-- BEGIN login header -->
+        <div class="login-header">
+
+            <!-- BEGIN login text -->
+            <h3 class="login-title">
+                Система <br>
+                Управления Знаниями
+            </h3>
+            <p class="login-text">
+                В настоящий момент авторизация доступна<br> только через социальные сети.
+            </p>
+            <!-- END login text -->
+
+            <!-- BEGIN login socials -->
+            <a href="{{ url('/redirect/facebook') }}" class="login-social login-social_facebook">
+                        <span class="login-social__icon icon-social-facebook">
+                        </span>
+            </a>
+            <a href="{{ url('/redirect/google') }}" class="login-social login-social_google">
+                        <span class="login-social__icon icon-social-google">
+                        </span>
+            </a>
+            <a href="{{ url('/redirect/yandex') }}" class="login-social login-social_yandex">
+                        <span class="login-social__icon icon-social-yandex">
+                        </span>
+            </a>
+            <a href="{{ url('/redirect/vk') }}" class="login-social login-social_vk">
+                        <span class="login-social__icon icon-social-vk">
+                        </span>
+            </a>
+            <!-- END login socials -->
+
+        </div>
+        <!-- END login header -->
     </div>
+
+
+    <!-- BEGIN login footer -->
+    <div class="login-footer"></div>
+    <!-- END login footer -->
+
 </div>
-@endsection
+<!-- END login page -->
+
+</body>
+</html>
