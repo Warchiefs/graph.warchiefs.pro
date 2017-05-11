@@ -47,7 +47,7 @@ Array (2)
 1 {id: 2, name: "Александр Мурадов", email: "ialexmur@gmail.com", created_at: "2017-04-21 14:13:53", updated_at: "2017-04-21 14:13:53"}
 
 -->
-<!-- Привет создания пространства
+<!-- Привет создания пространства -->
 <script>
     $.ajax({
         url: '/workspace/create',
@@ -55,20 +55,18 @@ Array (2)
         method: 'POST',
         data: {
             name: 'Workspace#1',
-            color: '#eee',
+
             users: JSON.stringify({
                 1: '0',
                 3: '0'
             })
         }
-    }).done(function (res) {
-        if (res.success == true) {
-            console.log(res.workspace);
-        } else {
-            console.log(res.error);
-        }
+    }).success(function (response) {
+        console.log(response);
+    }).error(function(response) {
+        console.log(response.responseJSON);
     });
 </script>
-
+<!--
 Ответ: {name: "Workspace#1", color: "#eee", own: 2, updated_at: "2017-05-06 23:27:55", created_at: "2017-05-06 23:27:55", …}
 -->

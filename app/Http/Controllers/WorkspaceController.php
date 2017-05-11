@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Workspace;
@@ -39,21 +40,15 @@ class WorkspaceController extends Controller
 	 */
     public function create(Request $request)
     {
-    	if(!$request->has('name')) {
-    		return response()->json([
-    			'success' => false,
-			    'error_code' => 0,
-			    'error' => 'Не указано имя'
-		    ]);
-	    }
-
-	    if(!$request->has('color')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 1,
-			    'error' => 'Не указан цвет'
-		    ]);
-	    }
+	    Validator::make($request->all(),
+		    [
+		        'name' => 'required',
+		        'color' => 'required',
+	        ],
+		    [
+		    	'name.required' => 'Не указано имя',
+			    'color.required' => 'Не указан цвет'
+		    ])->validate();
 
 	    $params['name'] = $request->get('name');
 	    $params['color'] = $request->get('color');
@@ -82,36 +77,25 @@ class WorkspaceController extends Controller
 	 *
 	 * @param Request $request
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return mixed
 	 */
     public function edit(Request $request)
     {
-    	if(!$request->has('workspace_id')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 0,
-			    'error' => 'Не указан ID пространства'
-		    ]);
-	    }
+	    Validator::make($request->all(),
+			        [
+			        'workspace_id' => 'required|valid_workspace|can_edit_workspace'
+			    ],
+			    [
+			        'workspace_id.required' => 'Не указано ID пространства',
+				    'workspace_id.valid_workspace' => 'Недопустимое пространство',
+				    'workspace_id.can_edit_workspace' => 'Вы не можете редактировать это пространство',
 
-	    if((new Workspace())->check_permissions($request->get('workspace_id'), 'edit')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 1,
-			    'error' => 'Не достаточно прав для совершения данного действия'
-		    ]);
-	    }
+			    ])
+		    ->validate();
+
 
 	    $workspace = Workspace::find($request->get('workspace_id'));
 
-
-	    if(!$workspace) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 2,
-			    'error' => 'Пространство не найдено'
-		    ]);
-	    }
 
 	    if($request->has('name')) {
 	    	$workspace->name = $request->get('name');
@@ -123,57 +107,37 @@ class WorkspaceController extends Controller
 
 	    $workspace->save();
 
-	    return response()->json([
-		    'success' => true,
-		    'workspace' => $workspace
-	    ]);
+	    return $workspace;
     }
 
 	/**
-	 * Удаление пространств
+	 * Удаление пространства
 	 *
 	 * @param Request $request
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return bool
 	 */
     public function delete(Request $request)
     {
-	    if(!$request->has('workspace_id')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 0,
-			    'error' => 'Не указан ID пространства'
-		    ]);
-	    }
+	    Validator::make($request->all(),
+		    [
+			    'workspace_id' => 'required|valid_workspace|can_delete_workspace'
+		    ],
+		    [
+			    'workspace_id.required' => 'Не указано ID пространства',
+			    'workspace_id.valid_workspace' => 'Недопустимое пространство',
+			    'workspace_id.can_edit_workspace' => 'Вы не можете редактировать это пространство',
 
-	    if((new Workspace())->check_permissions($request->get('workspace_id'), 'edit')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 1,
-			    'error' => 'Не достаточно прав для совершения данного действия'
-		    ]);
-	    }
+		    ])
+		    ->validate();
 
 	    $workspace = Workspace::find($request->get('workspace_id'));
-
-
-	    if(!$workspace) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 2,
-			    'error' => 'Пространство не найдено'
-		    ]);
-	    }
 
 	    unset($workspace);
 
 	    Workspace::find($request->get('workspace_id'))->delete();
 
-	    return response()->json([
-		    'success' => true
-	    ]);
-
-
+	    return true;
     }
 
 	/**
@@ -185,52 +149,24 @@ class WorkspaceController extends Controller
 	 */
     public function add_permission(Request $request)
     {
-	    if(!$request->has('workspace_id')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 0,
-			    'error' => 'Не указан ID пространства'
-		    ]);
-	    }
+	    Validator::make($request->all(),
+		    [
+			    'workspace_id' => 'required|valid_workspace|can_add_permission',
+			    'user_id' => 'required',
+			    'permission' => 'required|valid_permission'
+		    ],
+		    [
+			    'workspace_id.required' => 'Не указано ID пространства',
+			    'workspace_id.valid_workspace' => 'Недопустимое пространство',
+			    'workspace_id.can_add_permission' => 'Недостаточно прав для совершения этого действия',
+			    'user_id.required' => 'Не передан ID пользователя',
+			    'permission.required' => 'Не передан ключ привилегии',
+			    'permission.valid_permission' => 'Неверный ключ привилегии. (доступные ключи: 0, 1, 2)'
 
-	    if((new Workspace())->check_permissions($request->get('workspace_id'), 'edit')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 1,
-			    'error' => 'Не достаточно прав для совершения данного действия'
-		    ]);
-	    }
+		    ])
+		    ->validate();
 
 	    $workspace = Workspace::find($request->get('workspace_id'));
-
-
-	    if(!$workspace) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 2,
-			    'error' => 'Пространство не найдено'
-		    ]);
-	    }
-
-	    if(!$request->has('user_id')) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 3,
-			    'error' => 'Не передан ID пользователя'
-		    ]);
-	    }
-
-	    if(!$request->has('permission')
-		    || $request->get('permission') != 0
-		    || $request->get('permission') != 1
-		    || $request->get('permission') != 2
-	    ) {
-		    return response()->json([
-			    'success' => false,
-			    'error_code' => 4,
-			    'error' => 'Неверные права'
-		    ]);
-	    }
 
 	    $workspace->users->attach($request->get('user_id'), ['permissions' => $request->get('permission')]);
 
@@ -249,40 +185,24 @@ class WorkspaceController extends Controller
 	 */
 	public function delete_permission(Request $request)
 	{
-		if(!$request->has('workspace_id')) {
-			return response()->json([
-				'success' => false,
-				'error_code' => 0,
-				'error' => 'Не указан ID пространства'
-			]);
-		}
+		Validator::make($request->all(),
+			[
+				'workspace_id' => 'required|valid_workspace|can_delete_permission',
+				'user_id' => 'required',
+				'permission' => 'required|valid_permission'
+			],
+			[
+				'workspace_id.required' => 'Не указано ID пространства',
+				'workspace_id.valid_workspace' => 'Недопустимое пространство',
+				'workspace_id.can_delete_permission' => 'Недостаточно прав для совершения этого действия',
+				'user_id.required' => 'Не передан ID пользователя',
+				'permission.required' => 'Не передан ключ привилегии',
+				'permission.valid_permission' => 'Неверный ключ привилегии. (доступные ключи: 0, 1, 2)'
 
-		if((new Workspace())->check_permissions($request->get('workspace_id'), 'edit')) {
-			return response()->json([
-				'success' => false,
-				'error_code' => 1,
-				'error' => 'Не достаточно прав для совершения данного действия'
-			]);
-		}
+			])
+			->validate();
 
 		$workspace = Workspace::find($request->get('workspace_id'));
-
-
-		if(!$workspace) {
-			return response()->json([
-				'success' => false,
-				'error_code' => 2,
-				'error' => 'Пространство не найдено'
-			]);
-		}
-
-		if(!$request->has('user_id')) {
-			return response()->json([
-				'success' => false,
-				'error_code' => 3,
-				'error' => 'Не передан ID пользователя'
-			]);
-		}
 
 		$workspace->users->detach($request->get('user_id'));
 

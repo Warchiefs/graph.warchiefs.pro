@@ -18,7 +18,6 @@ class CreateTableWorkspace extends Migration
 		    $table->string('name');
 		    $table->string('color');
 		    $table->string('own');
-		    $table->text('users')->nullable();
 		    $table->timestamps();
 	    });
     }
