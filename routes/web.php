@@ -12,12 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/workspaces');
+});
+
+Route::get('/home', function (){
+	return redirect('/workspaces');
+});
+
+Route::get('/logout', function(){
+	Auth::logout();
+	return redirect('/');
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index');
 
 Route::get('/redirect/{provider}', 'SocialAuthController@redirect');
 Route::get('/callback/{provider}', 'SocialAuthController@callback');

@@ -49,7 +49,7 @@
                         <span class="login-social__icon icon-social-yandex">
                         </span>
             </a>
-            <a href="{{ url('/redirect/vk') }}" class="login-social login-social_vk">
+            <a href="{{ url('/redirect/vkontakte') }}" class="login-social login-social_vk">
                         <span class="login-social__icon icon-social-vk">
                         </span>
             </a>

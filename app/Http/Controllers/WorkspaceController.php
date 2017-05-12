@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Graph;
 use Validator;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,7 @@ class WorkspaceController extends Controller
 	 */
     public function index()
     {
+    	dd((new Graph())->getNodesWithRelsForWorkspace(11));
 	    return view('workspaces');
     }
 
@@ -131,6 +133,9 @@ class WorkspaceController extends Controller
 	    $workspace = Workspace::find($request->get('workspace_id'));
 
 	    unset($workspace);
+
+	    // Удаляет все Node этого пространства
+	    (new Graph())->deleteNodesForWorkspace($request->get('workspace_id'));
 
 	    Workspace::find($request->get('workspace_id'))->delete();
 
