@@ -12,7 +12,10 @@
         "everyman/neo4jphp": "dev-master",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "socialiteproviders/manager":"3.0.4",
+        "socialiteproviders/vkontakte":"3.0.0",
+        "socialiteproviders/yandex":"3.0.0",
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
