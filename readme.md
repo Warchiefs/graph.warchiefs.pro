@@ -8,8 +8,8 @@
 <code>composer install</code>
 
 В файле .env необходимо прописать данные от социальных приложения и БД.<br>
-Пример заполненного файла .env
-<code>
+Пример заполненного файла .env<br>
+<p>
 DB_CONNECTION=mysql<br>
 DB_HOST=127.0.0.1<br>
 DB_PORT=3306<br>
@@ -42,8 +42,7 @@ VK_REDIRECT=/callback/vkontakte<br>
 YANDEX_CLIENT_ID=78d850f6d79a4329b34ff95e2398d6f0<br>
 YANDEX_SECRET_KEY=0368ce6947c9455e96b2655854ea7d1e<br>
 YANDEX_REDIRECT=/callback/yandex<br>
-
-</code>
+</p>
 
 
 ## Методы API
