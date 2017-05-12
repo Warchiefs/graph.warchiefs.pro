@@ -40,6 +40,16 @@ class AppServiceProvider extends ServiceProvider
 	    });
 
 	    /**
+	     * Проверка возможности редактирования пространства
+	     */
+	    Validator::extend('can_read_workspace', function ($attribute, $workspace_id, $parameters, $validator) {
+		    if(!(new User())->check_permissions($workspace_id, 'read')) {
+			    return false;
+		    }
+		    return true;
+	    });
+
+	    /**
 	     * Проверка возможности удаления пространства
 	     */
 	    Validator::extend('can_delete_workspace', function ($attribute, $workspace_id, $parameters, $validator) {

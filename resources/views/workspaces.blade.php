@@ -290,16 +290,32 @@
 <script src="/build/App.js"></script>
 <!-- Пример обращения для поиска пользователей по строке - ищет в имени и email прямые совпадения со строкой поиска -->
 <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
-
 <script>
     $.ajax({
-        url: '/permissions/edit',
+        url: '/graph/relationship/edit',
         dataType: 'json',
         method: 'POST',
         data: {
             workspace_id: 11,
-            user_id: 12,
-            permission: 0
+            rel_id: 4,
+            type: "AAAAA",
+            params: JSON.stringify({
+                label: 'New node'
+            })
+        }
+    }).success(function (response) {
+        console.log(response);
+    }).error(function(response) {
+        console.log(response.responseJSON);
+    });
+</script>
+<script>
+    $.ajax({
+        url: '/graph/get',
+        dataType: 'json',
+        method: 'POST',
+        data: {
+            workspace_id: 11
         }
     }).success(function (response) {
         console.log(response);

@@ -29,7 +29,6 @@ class WorkspaceController extends Controller
 	 */
     public function index()
     {
-    	dd((new Graph())->getNodesWithRelsForWorkspace(11));
 	    return view('workspaces');
     }
 

@@ -51,21 +51,6 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * Возвращает пользователей из базы
-	 * по частичному совпадению имени или email
-	 * со строкой поиска - string
-	 * (LIKE %string%)
-	 *
-	 * @param $string
-	 *
-	 * @return mixed
-	 */
-	public function find($string)
-	{
-		return User::where('name', 'LIKE', "%$string%")->whereOr('email', 'LIKE', "%$string%")->get();
-	}
-
-	/**
 	 * Проверка привилегий авторизованного пользователя
 	 * на совершение определенного действия с пространством
 	 *
@@ -93,6 +78,9 @@ class User extends Authenticatable
 		}
 
 		switch ($action) {
+			case 'read':
+				return $perm == 0;
+				break;
 			case 'edit':
 				return $perm == 1;
 				break;

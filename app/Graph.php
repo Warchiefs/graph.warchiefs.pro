@@ -176,7 +176,7 @@ class Graph extends Model
 	 *
 	 * @return bool|\Everyman\Neo4j\Relationship
 	 */
-	public function makeRelationship($start_node_id, $end_node_id, $type, $params)
+	public function makeRelationship($start_node_id, $end_node_id, $type, $params = [])
 	{
 
 		$rel = $this->client
@@ -187,9 +187,11 @@ class Graph extends Model
 			return false;
 		}
 
-		foreach ($params as $key => $value)
-		{
-			$rel->setProperty($key, $value);
+		if($params) {
+			foreach ($params as $key => $value)
+			{
+				$rel->setProperty($key, $value);
+			}
 		}
 
 		$rel->save();
@@ -251,7 +253,7 @@ class Graph extends Model
 	}
 
 	/**
-	 * Удаляет все Node пространства
+	 * Удаляет все Node пространства и связи
 	 *
 	 * @param $workspace_id
 	 *
@@ -266,6 +268,13 @@ class Graph extends Model
 		}
 
 		foreach ($nodes as $node) {
+			$rels = $node->getRelationships();
+			if($rels) {
+				foreach ($rels as $rel) {
+					$rel->delete();
+				}
+			}
+
 			$node->delete();
 		}
 
@@ -273,7 +282,8 @@ class Graph extends Model
 	}
 
 	/**
-	 * Получает все Node пространства
+	 * Получает все Node пространства со связями
+	 * Возвращает 2 массива nodes и edges для vis.js
 	 *
 	 * @param $workspace_id
 	 *
@@ -293,10 +303,39 @@ class Graph extends Model
 			return false;
 		}
 
+		// Формируем структуру данных для vis.js
+		$return_nodes = [];
+		$return_edges = [];
+
 		foreach ($nodes as $node) {
-			$node->relations = $node->getRelationships();
+
+			$properties = $node->getProperties();
+			unset($properties['workspace_id']);
+
+			$return_nodes[] = array_merge([ 'id' => $node->getId(), ], $properties);
+			$rels = $node->getRelationships();
+			foreach ($rels as $rel) {
+
+				if(!in_array([
+					'type' => $rel->getType(),
+					'properties' => $rel->getProperties(),
+					'id' => $rel->getId(),
+					'from' => $rel->getStartNode()->getId(),
+					'to' => $rel->getEndNode()->getId()
+				], $return_edges)) {
+					$return_edges[] = [
+						'type' => $rel->getType(),
+						'properties' => $rel->getProperties(),
+						'id' => $rel->getId(),
+						'from' => $rel->getStartNode()->getId(),
+						'to' => $rel->getEndNode()->getId()
+					];
+				}
+
+
+			}
 		}
 
-		return $nodes;
+		return ['nodes' => $return_nodes, 'edges' => $return_edges];
 	}
 }

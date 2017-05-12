@@ -21,27 +21,24 @@ class UserController extends Controller
 	}
 
 	/**
-	 * Поиск пользователей по строке поиска.
+	 * Возвращает пользователей из базы
+	 * по частичному совпадению имени или email
+	 * со строкой поиска - string
+	 * (LIKE %string%)
 	 *
 	 * @param Request $request
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return array
 	 */
 	public function find_users(Request $request)
 	{
 		if($request->has('string')) {
 
 			$string = $request->get('string');
-
-			return response()->json([
-				'success' => true,
-				'users' => User::where('name', 'LIKE', "%$string%")->orWhere('email', 'LIKE', "%$string%")->get()
-			]);
+			$users = User::where('name', 'LIKE', "%$string%")->orWhere('email', 'LIKE', "%$string%")->get();
+			return [true, $users];
 		} else {
-			return response()->json([
-				'success' => true,
-				'users' => User::all()
-			]);
+			return [true, User::all()];
 		}
 	}
 
